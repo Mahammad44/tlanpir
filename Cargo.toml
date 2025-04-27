@@ -1,0 +1,20 @@
+[package]
+name = "tlanpir"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+leptos = "0.5"
+leptos_meta = "0.5
+leptos_router = "0.5"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies.wasm-bindgen]
+version = "0.2"
+
+[profile.release]
+opt-level = "z"
+lto = true
+
