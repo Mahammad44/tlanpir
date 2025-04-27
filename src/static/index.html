@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        #flights { margin-top: 20px; }
+        .flight-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Flight Tracking</h1>
+    <div id="flights"></div>
+
+    <script>
+        async function loadFlights() {
+            try {
+                const response = await fetch('/api/flights');
+                const flights = await response.json();
+                
+                const container = document.getElementById('flights');
+                container.innerHTML = '';
+                
+                flights.forEach(flight => {
+                    const card = document.createElement('div');
+                    card.className = 'flight-card';
+                    card.innerHTML = `
+                        <h3>${flight.callsign || 'Unknown'}</h3>
+                        <p>ICAO24: ${flight.icao24}</p>
+                        <p>Country: ${flight.country}</p>
+                        <p>Longitude: ${flight.longitude?.toFixed(4) || 'N/A'}</p>
+                        <p>Latitude: ${flight.latitude?.toFixed(4) || 'N/A'}</p>
+                        <p>Altitude: ${flight.altitude?.toFixed(0) || 'N/A'} m</p>
+                        <p>Speed: ${flight.velocity?.toFixed(0) || 'N/A'} m/s</p>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading flights:', error);
+            }
+        }
+
+        // Refresh data every 5 seconds
+        setInterval(loadFlights, 5000);
+        loadFlights();
+    </script>
+</body>
+</html>
